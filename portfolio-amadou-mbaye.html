@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Amadou MBAYE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2563eb;--pl:#eff6ff;--pd:#1d4ed8;
+  --accent:#0ea5e9;--green:#22c55e;--purple:#7c3aed;
+  --g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;
+  --g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;
+  --g800:#1f2937;--g900:#111827;
+  --r:16px;--sh:0 2px 8px rgba(0,0,0,.07),0 8px 24px rgba(0,0,0,.05);
+  --shl:0 8px 16px rgba(0,0,0,.06),0 24px 48px rgba(0,0,0,.12)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--g800);line-height:1.6;overflow-x:hidden}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s,visibility .5s}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ld-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--g900)}
+.ld-logo b{color:var(--primary)}
+.ld-bar{width:200px;height:3px;background:var(--g100);border-radius:99px;overflow:hidden}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));animation:ldFill 1.5s ease forwards}
+@keyframes ldFill{from{width:0}to{width:100%}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,box-shadow .3s}
+nav.scrolled{background:rgba(255,255,255,.93);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--g200)}
+.nav-in{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:66px}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--g900);text-decoration:none;opacity:0;animation:sD .6s ease 1.6s forwards}
+.nav-logo span{color:var(--primary)}
+.nav-links{display:flex;gap:4px;opacity:0;animation:sD .6s ease 1.7s forwards}
+@keyframes sD{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.nav-links a{font-size:13px;font-weight:500;color:var(--g600);text-decoration:none;padding:7px 14px;border-radius:8px;transition:all .2s}
+.nav-links a:hover{color:var(--primary);background:var(--pl)}
+.nav-cta{background:var(--primary)!important;color:#fff!important;border-radius:9px!important}
+.nav-cta:hover{background:var(--pd)!important;transform:translateY(-1px)}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* CURSOR */
+#cg{width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.05) 0%,transparent 70%);position:fixed;pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:left .12s,top .12s}
+
+/* HERO */
+#hero{min-height:100vh;padding:130px 28px 90px;display:flex;align-items:center;background:linear-gradient(150deg,#f8faff 0%,#fff 55%,#f0f9ff 100%);position:relative;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(65px);opacity:.45;animation:bA 9s ease-in-out infinite alternate}
+.b1{width:520px;height:520px;background:rgba(37,99,235,.07);top:-140px;right:-120px}
+.b2{width:420px;height:420px;background:rgba(14,165,233,.06);bottom:-100px;left:-80px;animation-delay:3s}
+.b3{width:320px;height:320px;background:rgba(124,58,237,.04);top:55%;left:42%;animation-delay:6s}
+@keyframes bA{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,25px) scale(1.06)}}
+#ptcl{position:absolute;inset:0;pointer-events:none}
+.particle{position:absolute;border-radius:50%;background:var(--primary);opacity:0;animation:pf linear infinite}
+@keyframes pf{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:.3}90%{opacity:.15}100%{opacity:0;transform:translateY(-80px) scale(1)}}
+.hero-in{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;position:relative;z-index:1}
+@media(max-width:900px){.hero-in{grid-template-columns:1fr}.hcard-wrap{display:none}}
+
+/* ============================
+   SHARED LETTER ANIMATIONS
+   Used in hero + footer
+   ============================ */
+/* Dark letter drop */
+.nl{display:inline-block;opacity:0;animation:nlDrop .55s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes nlDrop{
+  0%{opacity:0;transform:translateY(55px) rotate(12deg) scale(.5)}
+  55%{opacity:1;transform:translateY(-7px) rotate(-2.5deg) scale(1.07)}
+  75%{transform:translateY(3px) rotate(1deg) scale(.97)}
+  100%{opacity:1;transform:none}
+}
+/* Gradient shimmer letter drop — both animations declared together */
+.nl-g{
+  display:inline-block;opacity:0;
+  background:linear-gradient(135deg,#2563eb 0%,#0ea5e9 35%,#a78bfa 65%,#2563eb 100%);
+  background-size:300% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+@keyframes glDrop{
+  0%{opacity:0;transform:translateY(55px) rotate(12deg) scale(.5)}
+  55%{opacity:1;transform:translateY(-7px) rotate(-2.5deg) scale(1.07)}
+  75%{transform:translateY(3px) rotate(1deg) scale(.97)}
+  100%{opacity:1;transform:none}
+}
+@keyframes glShimmer{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* Footer white letter variant */
+.nl-w{display:inline-block;opacity:0;color:#fff;animation:nlDrop .55s cubic-bezier(.34,1.56,.64,1) forwards}
+/* Footer gradient letter variant — cyan/purple on dark */
+.nl-wg{
+  display:inline-block;opacity:0;
+  background:linear-gradient(135deg,var(--accent) 0%,#a78bfa 50%,var(--accent) 100%);
+  background-size:300% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+@keyframes wgDrop{
+  0%{opacity:0;transform:translateY(40px) rotate(10deg) scale(.5)}
+  55%{opacity:1;transform:translateY(-5px) rotate(-2deg) scale(1.07)}
+  75%{transform:translateY(3px) rotate(1deg) scale(.97)}
+  100%{opacity:1;transform:none}
+}
+@keyframes wgShimmer{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* ========================= */
+
+.hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(38px,6vw,62px);line-height:1.2;margin-bottom:14px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--g200);border-radius:99px;padding:6px 16px 6px 8px;font-size:13px;font-weight:500;color:var(--g600);margin-bottom:20px;box-shadow:var(--sh);opacity:0;animation:hU .6s ease 2.1s forwards}
+.pdot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pd 2s infinite}
+@keyframes pd{0%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.hero-role{font-size:clamp(15px,2.2vw,18px);color:var(--g500);font-weight:400;margin-bottom:18px;opacity:0;animation:hU .7s ease 2.2s forwards}
+.tw-wrap{font-size:16px;color:var(--g600);margin-bottom:18px;opacity:0;animation:hU .7s ease 2.2s forwards}
+.tw{color:var(--primary);font-weight:600;border-right:2px solid var(--primary);animation:blink .75s step-end infinite}
+@keyframes blink{from,to{border-color:transparent}50%{border-color:var(--primary)}}
+.hero-desc{font-size:15px;color:var(--g600);line-height:1.8;max-width:540px;margin-bottom:30px;opacity:0;animation:hU .7s ease 2.3s forwards}
+.hero-acts{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:42px;opacity:0;animation:hU .7s ease 2.4s forwards}
+@keyframes hU{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:12px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;border:none;text-decoration:none;transition:all .25s}
+.btn-p{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(37,99,235,.35)}
+.btn-o{background:#fff;color:var(--g700);border:1.5px solid var(--g200)}
+.btn-o:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px)}
+.hero-stats{display:flex;border:1px solid var(--g200);border-radius:var(--r);background:#fff;box-shadow:var(--sh);overflow:hidden;opacity:0;animation:hU .7s ease 2.5s forwards}
+.hst{flex:1;text-align:center;padding:18px 14px;border-right:1px solid var(--g200);transition:background .2s}
+.hst:last-child{border-right:none}
+.hst:hover{background:var(--pl)}
+.hst-n{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--primary);display:block;line-height:1;margin-bottom:4px}
+.hst-l{font-size:11px;color:var(--g500)}
+
+/* Hero card */
+.hcard-wrap{opacity:0;animation:cIn .8s ease 2.4s forwards}
+@keyframes cIn{from{opacity:0;transform:translateX(40px) rotate(2deg)}to{opacity:1;transform:translateX(0) rotate(0)}}
+.hc{background:#fff;border:1px solid var(--g200);border-radius:24px;padding:28px;box-shadow:var(--shl);position:relative}
+.hc::before{content:'';position:absolute;top:0;left:24px;right:24px;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:0 0 6px 6px}
+.hc-av{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#dbeafe,#e0f2fe);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:14px}
+.hc-name{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--g900);margin-bottom:3px}
+.hc-role{font-size:12px;color:var(--g500);margin-bottom:16px}
+.hc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.t{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--pl);color:var(--primary)}
+.t.g{background:#dcfce7;color:#16a34a}.t.p{background:#f3e8ff;color:#7c3aed}.t.o{background:#fef3c7;color:#d97706}
+.hc-div{height:1px;background:var(--g100);margin:14px 0}
+.hc-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--g600);margin-bottom:8px}
+.hc-ico{width:28px;height:28px;border-radius:7px;background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.fb{position:absolute;background:#fff;border:1px solid var(--g200);border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--g700);box-shadow:var(--sh);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.fb1{top:-14px;right:-8px;animation:fl 3s ease-in-out infinite}
+.fb2{bottom:36px;left:-18px;animation:fl 3s ease-in-out 1.5s infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* SECTIONS */
+section{padding:96px 28px}
+.container{max-width:1100px;margin:0 auto}
+.stag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--primary);background:var(--pl);padding:5px 14px;border-radius:99px;margin-bottom:12px}
+.stitle{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(26px,4vw,40px);color:var(--g900);line-height:1.15;margin-bottom:12px}
+.ssub{font-size:16px;color:var(--g500);max-width:540px;line-height:1.7}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.lft{transform:translateX(-28px)}.reveal.rgt{transform:translateX(28px)}
+.reveal.vis{opacity:1;transform:translate(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* ABOUT */
+#about{background:var(--g50)}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-top:52px}
+@media(max-width:768px){.ag{grid-template-columns:1fr}}
+.ap{font-size:15px;color:var(--g600);line-height:1.85;margin-bottom:16px}
+.tl{margin-top:28px;position:relative}
+.tl::before{content:'';position:absolute;left:17px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--primary),var(--accent),var(--green));border-radius:99px}
+.tli{display:flex;gap:18px;margin-bottom:22px}
+.tld{width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;z-index:1;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tli:hover .tld{border-color:var(--primary);background:var(--pl);transform:scale(1.1)}
+.tlp{font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.tlo{font-size:14px;font-weight:700;color:var(--g800);margin-bottom:1px}
+.tlr{font-size:12px;color:var(--g500)}
+.ics{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ic{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:18px;box-shadow:var(--sh);transition:all .3s}
+.ic:hover{transform:translateY(-4px);box-shadow:var(--shl);border-color:rgba(37,99,235,.25)}
+.ic-i{font-size:26px;margin-bottom:10px}.ic-t{font-size:12px;font-weight:700;color:var(--g700);margin-bottom:3px}.ic-v{font-size:12px;color:var(--g500);line-height:1.4}
+
+/* SKILLS */
+#skills{background:#fff}
+.skg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:44px}
+.skc{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:24px;box-shadow:var(--sh);transition:all .3s;position:relative;overflow:hidden}
+.skc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--pl),transparent);opacity:0;transition:opacity .3s}
+.skc:hover{transform:translateY(-6px);box-shadow:var(--shl);border-color:rgba(37,99,235,.2)}
+.skc:hover::before{opacity:1}
+.sk-i{width:50px;height:50px;border-radius:13px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;transition:transform .3s;position:relative;z-index:1}
+.skc:hover .sk-i{transform:rotate(-5deg) scale(1.1)}
+.sk-t{font-size:15px;font-weight:700;color:var(--g900);margin-bottom:6px;position:relative;z-index:1}
+.sk-d{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:16px;position:relative;z-index:1}
+.bars{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+.bi{display:flex;flex-direction:column;gap:3px}
+.bl{display:flex;justify-content:space-between;font-size:11px;color:var(--g500);font-weight:500}
+.bt{height:5px;background:var(--g100);border-radius:99px;overflow:hidden}
+.bf{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent));width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.tgs{display:flex;flex-wrap:wrap;gap:5px;position:relative;z-index:1}
+.tg{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--g100);color:var(--g600);transition:all .2s}
+.skc:hover .tg{background:#fff;color:var(--primary)}
+
+/* TEACHING */
+#teaching{background:var(--g50)}
+.tcg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:44px}
+.tcc{background:#fff;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);transition:all .3s}
+.tcc:hover{transform:translateY(-6px);box-shadow:var(--shl)}
+.tc-top{height:8px}
+.c1 .tc-top{background:linear-gradient(90deg,var(--primary),var(--accent))}
+.c2 .tc-top{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.c3 .tc-top{background:linear-gradient(90deg,#065f46,#10b981)}
+.c4 .tc-top{background:linear-gradient(90deg,#92400e,#f59e0b)}
+.c5 .tc-top{background:linear-gradient(90deg,#1e3a5f,#60a5fa)}
+.c6 .tc-top{background:linear-gradient(90deg,#be185d,#f472b6)}
+.tc-b{padding:20px}
+.tc-inst{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:5px}
+.tc-subj{font-size:15px;font-weight:700;color:var(--g900);margin-bottom:6px;line-height:1.3}
+.tc-lvl{font-size:12px;color:var(--g500);margin-bottom:14px}
+.tc-ft{padding-top:12px;border-top:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between}
+.tc-type{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--pl);color:var(--primary)}
+.tc-date{font-size:11px;color:var(--g400)}
+
+/* PUBLICATIONS */
+#publications{background:#fff}
+.pubg{display:flex;flex-direction:column;gap:16px;margin-top:44px}
+.pubc{background:#fff;border:1px solid var(--g200);border-radius:var(--r);padding:24px;box-shadow:var(--sh);transition:all .3s;display:flex;gap:20px;align-items:flex-start}
+.pubc:hover{transform:translateX(6px);box-shadow:var(--shl);border-color:rgba(37,99,235,.25)}
+.pub-i{width:50px;height:50px;border-radius:13px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;transition:transform .3s}
+.pubc:hover .pub-i{transform:rotate(-5deg) scale(1.05)}
+.pub-y{font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.pub-t{font-size:15px;font-weight:700;color:var(--g900);margin-bottom:6px;line-height:1.4}
+.pub-c{font-size:13px;color:var(--g500);margin-bottom:10px;line-height:1.5}
+.pub-bs{display:flex;gap:6px;flex-wrap:wrap}
+.pb{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px}
+.pb-sc{background:#fef3c7;color:#d97706}.pb-sp{background:#dcfce7;color:#16a34a}.pb-wo{background:#ede9fe;color:#7c3aed}
+
+/* PROJECTS */
+#projects{background:var(--g50)}
+.prg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:44px}
+.prc{background:#fff;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);transition:all .3s}
+.prc:hover{transform:translateY(-6px);box-shadow:var(--shl)}
+.pr-top{height:110px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.pbg{position:absolute;inset:0;transition:transform .5s}
+.prc:hover .pbg{transform:scale(1.08)}
+.p1 .pbg{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.p2 .pbg{background:linear-gradient(135deg,#065f46,#10b981)}
+.p3 .pbg{background:linear-gradient(135deg,#7c2d12,#ea580c)}
+.p4 .pbg{background:linear-gradient(135deg,#4c1d95,#8b5cf6)}
+.pr-em{font-size:44px;position:relative;z-index:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2));transition:transform .3s}
+.prc:hover .pr-em{transform:scale(1.12) rotate(-5deg)}
+.pr-b{padding:20px}
+.pr-yr{font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.pr-t{font-size:15px;font-weight:700;color:var(--g900);margin-bottom:6px}
+.pr-d{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:14px}
+.pr-ts{display:flex;flex-wrap:wrap;gap:5px}
+.pr-tg{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--g100);color:var(--g600)}
+
+/* CONTACT */
+#contact{background:#fff}
+.ctg{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:52px;align-items:start}
+@media(max-width:768px){.ctg{grid-template-columns:1fr}}
+.ct-ti{font-size:19px;font-weight:700;color:var(--g900);margin-bottom:10px}
+.ct-de{font-size:14px;color:var(--g500);line-height:1.7;margin-bottom:26px}
+.ct-its{display:flex;flex-direction:column;gap:12px}
+.ci{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;transition:all .25s;text-decoration:none}
+.ci:hover{background:var(--pl);border-color:rgba(37,99,235,.2);transform:translateX(5px)}
+.ci-ic{width:40px;height:40px;border-radius:10px;background:#fff;box-shadow:var(--sh);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:transform .25s}
+.ci:hover .ci-ic{transform:scale(1.1) rotate(-5deg)}
+.ci-lb{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px}
+.ci-vl{font-size:13px;font-weight:600;color:var(--g800)}
+.frm{display:flex;flex-direction:column;gap:14px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.frow{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:12px;font-weight:600;color:var(--g700)}
+.fi,.fta{padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;font-family:inherit;color:var(--g800);background:#fff;outline:none;width:100%;transition:border-color .2s,box-shadow .2s,transform .2s}
+.fi:focus,.fta:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1);transform:translateY(-1px)}
+.fta{min-height:120px;resize:vertical}
+.fsub{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;border-radius:11px;padding:13px 26px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:8px;justify-content:center}
+.fsub:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,99,235,.35)}
+
+/* FOOTER */
+footer{background:var(--g900);color:#fff;padding:52px 28px 32px;text-align:center;position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--green),var(--purple),var(--primary));background-size:300% 100%;animation:gm 5s linear infinite}
+@keyframes gm{0%{background-position:0%}100%{background-position:300%}}
+.ft-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;margin-bottom:8px;min-height:1.4em}
+.ft-desc{font-size:13px;color:var(--g400);margin-bottom:24px}
+.ft-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.ft-links a{font-size:13px;color:var(--g400);text-decoration:none;transition:color .2s}
+.ft-links a:hover{color:#fff}
+.ft-copy{font-size:12px;color:var(--g600);padding-top:20px;border-top:1px solid rgba(255,255,255,.06)}
+.ft-cursor{display:inline-block;color:var(--accent);font-weight:300;animation:ftBlink .7s step-end infinite}
+@keyframes ftBlink{from,to{opacity:1}50%{opacity:0}}
+</style>
+</head>
+<body>
+
+<div id="cg"></div>
+
+<div id="loader">
+  <div class="ld-logo">Amadou <b>MBAYE</b></div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<nav id="mainNav">
+  <div class="nav-in">
+    <a class="nav-logo" href="#hero">Amadou <span>MBAYE</span></a>
+    <div class="nav-links">
+      <a href="#about">Expérience</a>
+      <a href="#skills">Compétences</a>
+      <a href="#teaching">Enseignement</a>
+      <a href="#publications">Publications</a>
+      <a href="#contact" class="nav-cta">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div id="ptcl"></div>
+  <div class="hero-in">
+    <div>
+      <div class="hero-badge"><span class="pdot"></span>Disponible pour collaborations &amp; formations</div>
+      <h1 class="hero-name">
+        <span class="nl" style="animation-delay:1.90s">A</span><span class="nl" style="animation-delay:1.99s">m</span><span class="nl" style="animation-delay:2.08s">a</span><span class="nl" style="animation-delay:2.17s">d</span><span class="nl" style="animation-delay:2.26s">o</span><span class="nl" style="animation-delay:2.35s">u</span>
+        <br>
+        <span class="nl-g" style="animation:glDrop .55s cubic-bezier(.34,1.56,.64,1) 2.44s forwards,glShimmer 2.5s linear 3.14s infinite">M</span><span class="nl-g" style="animation:glDrop .55s cubic-bezier(.34,1.56,.64,1) 2.53s forwards,glShimmer 2.5s linear 3.23s infinite">B</span><span class="nl-g" style="animation:glDrop .55s cubic-bezier(.34,1.56,.64,1) 2.62s forwards,glShimmer 2.5s linear 3.32s infinite">A</span><span class="nl-g" style="animation:glDrop .55s cubic-bezier(.34,1.56,.64,1) 2.71s forwards,glShimmer 2.5s linear 3.41s infinite">Y</span><span class="nl-g" style="animation:glDrop .55s cubic-bezier(.34,1.56,.64,1) 2.80s forwards,glShimmer 2.5s linear 3.50s infinite">E</span>
+      </h1>
+      <p class="hero-role"> Enseignant-Chercheur &bull; Data Scientist &bull; Géomaticien</p>
+      <div class="tw-wrap">Je suis  <span class="tw" id="tw"></span></div>
+      <p class="hero-desc">Spécialisé dans l'analyse spatiale, l'IA appliquée aux données géospatiales et le développement de plateformes SIG web. Consultant international et chercheur publié dans des conférences indexées SCOPUS.</p>
+      <div class="hero-acts">
+        <a href="#teaching" class="btn btn-p">📚 Mon enseignement</a>
+        <a href="https://mbayeamadou.com" target="_blank" class="btn btn-o">🌐 Mon site web</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hst"><span class="hst-n"><span class="cnt" data-t="3">0</span>+</span><span class="hst-l">Années consulting</span></div>
+        <div class="hst"><span class="hst-n"><span class="cnt" data-t="10">0</span>+</span><span class="hst-l">Cours dispensés</span></div>
+        <div class="hst"><span class="hst-n"><span class="cnt" data-t="2">0</span></span><span class="hst-l">Publications SCOPUS</span></div>
+        <div class="hst"><span class="hst-n"><span class="cnt" data-t="4">0</span></span><span class="hst-l">Mémoires encadrés</span></div>
+      </div>
+    </div>
+    <div class="hcard-wrap">
+      <div class="hc" style="position:relative">
+        <div class="fb fb1">🌍 Projet multi-pays GIZ</div>
+        <div class="fb fb2">📄 Publié SCOPUS 2024</div>
+        <div class="hc-av">🗺️</div>
+        <div class="hc-name">Amadou MBAYE</div>
+        <div class="hc-role">Géomaticien &amp; Data Scientist · Dakar, Sénégal</div>
+        <div class="hc-tags">
+          <span class="t">🤖 IA</span><span class="t g">🗺️ SIG</span>
+          <span class="t p">📊 Data Science</span><span class="t o">🛰️ GNSS</span>
+        </div>
+        <div class="hc-div"></div>
+        <div class="hc-row"><div class="hc-ico">🏫</div>ESP · UIT · UNCH · SABDARIFA</div>
+        <div class="hc-row"><div class="hc-ico">📍</div>Amitié 3, Dakar, Sénégal</div>
+        <div class="hc-row"><div class="hc-ico">🌐</div>mbayeamadou.com</div>
+        <div class="hc-row"><div class="hc-ico">📞</div>+221 77 790 04 95</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="reveal"><span class="stag">💼 Expérience</span><h2 class="stitle">Parcours professionnel</h2><p class="ssub">Consultant international, expert géomaticien et développeur SIG avec une expérience multi-pays en Afrique.</p></div>
+    <div class="ag">
+      <div class="reveal lft">
+        <p class="ap">Géomaticien et data scientist passionné, j'ai travaillé sur des projets d'envergure internationale impliquant l'analyse des données dans l'économie numérique africaine, la cartographie censitaire nationale et le développement de plateformes WebGIS.</p>
+        <p class="ap">Mon expertise couvre les SIG, l'IA appliquée aux données géospatiales, la gouvernance des données et l'innovation numérique.</p>
+        <div class="tl">
+          <div class="tli"><div class="tld">🌍</div><div><div class="tlp">2023 – 2025</div><div class="tlo">GIZ – Projet International Multi-Pays</div><div class="tlr">Consultant en Data Science (Sénégal, Afrique du Sud, Kenya)</div></div></div>
+          <div class="tli"><div class="tld">🗺️</div><div><div class="tlp">2022 – 2023</div><div class="tlo">ANSD – Agence Nationale de la Statistique</div><div class="tlr">Expert Géomaticien – RGPH5</div></div></div>
+          <div class="tli"><div class="tld">💻</div><div><div class="tlp">2021 – 2022</div><div class="tlo">GEOMATICA – Saint-Louis</div><div class="tlr">Développeur Web GIS (Django, PostgreSQL, ArcGIS)</div></div></div>
+        </div>
+      </div>
+      <div class="reveal rgt">
+        <div class="ics">
+          <div class="ic d1"><div class="ic-i">🎓</div><div class="ic-t">Diplôme</div><div class="ic-v">Double Master GNSS — CRASTE-LF / IAV Hassan II</div></div>
+          <div class="ic d2"><div class="ic-i">🌍</div><div class="ic-t">Langues</div><div class="ic-v">Français · Anglais · Arabe</div></div>
+          <div class="ic d3"><div class="ic-i">🛰️</div><div class="ic-t">Spécialité</div><div class="ic-v">GNSS, SIG, Télédétection, Webmapping</div></div>
+          <div class="ic d4"><div class="ic-i">🔬</div><div class="ic-t">Recherche</div><div class="ic-v">IA, Deep Learning, Détection médicale</div></div>
+          <div class="ic d5" style="grid-column:span 2"><div class="ic-i">🤝</div><div class="ic-t">Partenaires</div><div class="ic-v">GIZ · Univ. Johannesburg · York University · Univ. Michigan · ACTS Kenya · ESP Dakar</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="reveal"><span class="stag">⚡ Compétences</span><h2 class="stitle">Expertise technique</h2><p class="ssub">Un large spectre alliant géomatique, data science, IA et développement logiciel.</p></div>
+    <div class="skg">
+      <div class="skc reveal d1"><div class="sk-i">🤖</div><div class="sk-t">IA &amp; Machine Learning</div><div class="sk-d">Deep Learning, Computer Vision, YOLOv7, NLP et modèles prédictifs.</div><div class="bars"><div class="bi"><div class="bl"><span>Machine Learning</span><span>90%</span></div><div class="bt"><div class="bf" data-w="90"></div></div></div><div class="bi"><div class="bl"><span>Deep Learning / YOLO</span><span>85%</span></div><div class="bt"><div class="bf" data-w="85"></div></div></div><div class="bi"><div class="bl"><span>Computer Vision</span><span>82%</span></div><div class="bt"><div class="bf" data-w="82"></div></div></div></div></div>
+      <div class="skc reveal d2"><div class="sk-i">🗺️</div><div class="sk-t">SIG &amp; Géomatique</div><div class="sk-d">ArcGIS Pro, QGIS, GeoServer, MapServer, PostGIS et analyse spatiale.</div><div class="bars"><div class="bi"><div class="bl"><span>ArcGIS Pro / QGIS</span><span>95%</span></div><div class="bt"><div class="bf" data-w="95"></div></div></div><div class="bi"><div class="bl"><span>PostGIS / PostgreSQL</span><span>90%</span></div><div class="bt"><div class="bf" data-w="90"></div></div></div><div class="bi"><div class="bl"><span>GeoServer / MapServer</span><span>85%</span></div><div class="bt"><div class="bf" data-w="85"></div></div></div></div></div>
+      <div class="skc reveal d3"><div class="sk-i">🐍</div><div class="sk-t">Programmation</div><div class="sk-d">Python, R, Java, C, HTML5, JavaScript, CSS pour data science et web.</div><div class="bars"><div class="bi"><div class="bl"><span>Python</span><span>95%</span></div><div class="bt"><div class="bf" data-w="95"></div></div></div><div class="bi"><div class="bl"><span>R</span><span>88%</span></div><div class="bt"><div class="bf" data-w="88"></div></div></div><div class="bi"><div class="bl"><span>JavaScript / HTML / CSS</span><span>80%</span></div><div class="bt"><div class="bf" data-w="80"></div></div></div></div></div>
+      <div class="skc reveal d1"><div class="sk-i">🌐</div><div class="sk-t">WebGIS &amp; Cartographie Web</div><div class="sk-d">Plateformes webmapping avec Leaflet, OpenLayers et Django.</div><div class="tgs"><span class="tg">Leaflet</span><span class="tg">OpenLayers</span><span class="tg">Django</span><span class="tg">GeoServer</span><span class="tg">WebMapping</span></div></div>
+      <div class="skc reveal d2"><div class="sk-i">🛰️</div><div class="sk-t">GNSS &amp; Télédétection</div><div class="sk-d">Navigation par satellite, traitement d'images et modélisation spatiale.</div><div class="tgs"><span class="tg">GNSS</span><span class="tg">Télédétection</span><span class="tg">Géodésie</span><span class="tg">Drone</span><span class="tg">MEDALUS</span><span class="tg">Matlab</span></div></div>
+      <div class="skc reveal d3"><div class="sk-i">📊</div><div class="sk-t">Data Science &amp; Visualisation</div><div class="sk-d">Analyse de données, tableaux de bord et rapports stratégiques.</div><div class="tgs"><span class="tg">Power BI</span><span class="tg">Pandas</span><span class="tg">Scikit-learn</span><span class="tg">TensorFlow</span><span class="tg">Git / GitHub</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="teaching">
+  <div class="container">
+    <div class="reveal"><span class="stag">🎓 Enseignement</span><h2 class="stitle">Activités d'enseignement</h2><p class="ssub">Chargé de cours dans plusieurs universités et écoles supérieures au Sénégal.</p></div>
+    <div class="tcg">
+      <div class="tcc c1 reveal d1"><div class="tc-top"></div><div class="tc-b"><div class="tc-inst">Université Numérique Cheikh Hamidou Kane</div><div class="tc-subj">Introduction à l'Intelligence Artificielle</div><div class="tc-lvl">Cours magistral</div><div class="tc-ft"><span class="tc-type">CM</span><span class="tc-date">2026 – Présent</span></div></div></div>
+      <div class="tcc c2 reveal d2"><div class="tc-top"></div><div class="tc-b"><div class="tc-inst">Université Iba Der Thiam de Thiès</div><div class="tc-subj">Compilation</div><div class="tc-lvl">Master 2 Génie Logiciel</div><div class="tc-ft"><span class="tc-type">CM</span><span class="tc-date">2024 – Présent</span></div></div></div>
+      <div class="tcc c3 reveal d3"><div class="tc-top"></div><div class="tc-b"><div class="tc-inst">École Supérieure Polytechnique (ESP)</div><div class="tc-subj">Systèmes d'Exploitation avancés</div><div class="tc-lvl">Master 2 Recherche</div><div class="tc-ft"><span class="tc-type">Cours</span><span class="tc-date">2024 – Présent</span></div></div></div>
+      <div class="tcc c4 reveal d1"><div class="tc-top"></div><div class="tc-b"><div class="tc-inst">École Supérieure Polytechnique (ESP)</div><div class="tc-subj">Machine Learning &amp; Fouille de données</div><div class="tc-lvl">DIC 2 IADB</div><div class="tc-ft"><span class="tc-type">TP</span><span class="tc-date">2024 – Présent</span></div></div></div>
+      <div class="tcc c5 reveal d2"><div class="tc-top"></div><div class="tc-b"><div class="tc-inst">Institut Supérieur SABDARIFA</div><div class="tc-subj">Analyse spatiale avec Python et R</div><div class="tc-lvl">Bachelor Géomatique / BTS2</div><div class="tc-ft"><span class="tc-type">CM</span><span class="tc-date">2025 – Présent</span></div></div></div>
+      <div class="tcc c6 reveal d3"><div class="tc-top"></div><div class="tc-b"><div class="tc-inst">Institut Supérieur SABDARIFA</div><div class="tc-subj">Base de données spatiales</div><div class="tc-lvl">Bachelor Géomatique / BTS1</div><div class="tc-ft"><span class="tc-type">CM</span><span class="tc-date">2023 – Présent</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="container">
+    <div class="reveal"><span class="stag">📄 Publications</span><h2 class="stitle">Publications scientifiques</h2><p class="ssub">Articles publiés dans des conférences internationales indexées SCOPUS, Web of Science et SpringerLink.</p></div>
+    <div class="pubg">
+      <div class="pubc reveal d1"><div class="pub-i">👁️</div><div><div class="pub-y">2024 — Springer Nature · ISPR 2024 (Istanbul)</div><div class="pub-t">Artificial Intelligence-based on Automatic Detection of Diabetic Eye Diseases: A Systematic Review</div><div class="pub-c">4th International Conference on Intelligent Systems and Pattern Recognition — Istanbul, Turquie</div><div class="pub-bs"><span class="pb pb-sc">SCOPUS</span><span class="pb pb-sp">SpringerLink</span><span class="pb pb-wo">Web of Science</span></div></div></div>
+      <div class="pubc reveal d2"><div class="pub-i">🔬</div><div><div class="pub-y">2024 — RTIS 2024 (Vietnam)</div><div class="pub-t">Comparative Study of Machine Learning Models for Glaucoma Detection Based on Retinal Images</div><div class="pub-c">Sixth International Conference on Real-time Intelligent Systems — Vietnam</div><div class="pub-bs"><span class="pb pb-sc">SCOPUS</span><span class="pb pb-sp">SpringerLink</span><span class="pb pb-wo">El Compendex</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="reveal"><span class="stag">🚀 Projets</span><h2 class="stitle">Réalisations notables</h2><p class="ssub">Des projets concrets alliant géomatique, IA et data science au service de défis réels.</p></div>
+    <div class="prg">
+      <div class="prc p1 reveal d1"><div class="pr-top"><div class="pbg"></div><span class="pr-em">🚤</span></div><div class="pr-b"><div class="pr-yr">2023 — IRD</div><div class="pr-t">Comptage de pirogues par Deep Learning</div><div class="pr-d">Détection automatique via YOLOv7 dans des images drone.</div><div class="pr-ts"><span class="pr-tg">YOLOv7</span><span class="pr-tg">Python</span><span class="pr-tg">Drone</span></div></div></div>
+      <div class="prc p2 reveal d2"><div class="pr-top"><div class="pbg"></div><span class="pr-em">🏘️</span></div><div class="pr-b"><div class="pr-yr">2022 — ANSD / RGPH5</div><div class="pr-t">Numérotation automatique des concessions</div><div class="pr-d">Script R pour le 5e Recensement Général de la Population.</div><div class="pr-ts"><span class="pr-tg">R</span><span class="pr-tg">SIG</span><span class="pr-tg">Automatisation</span></div></div></div>
+      <div class="prc p3 reveal d3"><div class="pr-top"><div class="pbg"></div><span class="pr-em">🌾</span></div><div class="pr-b"><div class="pr-yr">2020 — IAV Hassan II</div><div class="pr-t">Carte de sensibilité à la désertification</div><div class="pr-d">Modèle MEDALUS avec QGIS pour l'analyse spatiale.</div><div class="pr-ts"><span class="pr-tg">QGIS</span><span class="pr-tg">MEDALUS</span><span class="pr-tg">Télédétection</span></div></div></div>
+      <div class="prc p4 reveal d1"><div class="pr-top"><div class="pbg"></div><span class="pr-em">🏡</span></div><div class="pr-b"><div class="pr-yr">2021 — GEOMATICA</div><div class="pr-t">Plateforme WebGIS de gestion foncière</div><div class="pr-d">Webmapping pour la commune de Mékhé avec Django et PostgreSQL.</div><div class="pr-ts"><span class="pr-tg">Django</span><span class="pr-tg">PostgreSQL</span><span class="pr-tg">GeoServer</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="reveal"><span class="stag">✉️ Contact</span><h2 class="stitle">Prenons contact</h2><p class="ssub">Collaboration, consulting, formation ou question ? N'hésitez pas à me contacter.</p></div>
+    <div class="ctg">
+      <div class="reveal lft">
+        <div class="ct-ti">Coordonnées</div>
+        <div class="ct-de">Je suis disponible pour des projets de consulting, des collaborations académiques et des formations.</div>
+        <div class="ct-its">
+          <a class="ci" href="/cdn-cgi/l/email-protection#600d02011905010d01040f1515070220070d01090c4e030f0d"><div class="ci-ic">📧</div><div><div class="ci-lb">Email</div><div class="ci-vl"><span class="__cf_email__" data-cfemail="d5b8b7b4acb0b4b8b4b1baa0a0b2b795b2b8b4bcb9fbb6bab8">[email&#160;protected]</span></div></div></a>
+          <a class="ci" href="tel:+221777900495"><div class="ci-ic">📞</div><div><div class="ci-lb">Téléphone</div><div class="ci-vl">+221 77 790 04 95</div></div></a>
+          <a class="ci" href="https://mbayeamadou.com" target="_blank"><div class="ci-ic">🌐</div><div><div class="ci-lb">Site web</div><div class="ci-vl">mbayeamadou.com</div></div></a>
+          <a class="ci" href="#"><div class="ci-ic">📍</div><div><div class="ci-lb">Localisation</div><div class="ci-vl">Amitié 3, Dakar, Sénégal</div></div></a>
+        </div>
+      </div>
+      <div class="reveal rgt">
+        <form class="frm" onsubmit="sendForm(event)">
+          <div class="frow"><div class="fg"><label class="fl">Prénom</label><input class="fi" type="text" placeholder="Votre prénom" required></div><div class="fg"><label class="fl">Nom</label><input class="fi" type="text" placeholder="Votre nom" required></div></div>
+          <div class="fg"><label class="fl">Email</label><input class="fi" type="email" placeholder="votre@email.com" required></div>
+          <div class="fg"><label class="fl">Sujet</label><input class="fi" type="text" placeholder="Objet de votre message" required></div>
+          <div class="fg"><label class="fl">Message</label><textarea class="fta" placeholder="Votre message..." required></textarea></div>
+          <button type="submit" class="fsub" id="sb"><span id="sbt">Envoyer</span></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-logo"><span id="ftTyped"></span><span class="ft-cursor">|</span></div>
+  <div class="ft-desc">Enseignant-Chercheur · Data Scientist · Géomaticien — Dakar, Sénégal</div>
+  <div class="ft-links">
+    <a href="#about">Expérience</a><a href="#skills">Compétences</a>
+    <a href="#teaching">Enseignement</a><a href="#publications">Publications</a>
+    <a href="#contact">Contact</a><a href="https://mbayeamadou.com" target="_blank">Site web</a>
+  </div>
+  <div class="ft-copy">2025 Amadou MBAYE — Tous droits réservés · mbayeamadou.com</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// LOADER
+window.addEventListener('load', function() {
+  setTimeout(function() { document.getElementById('loader').classList.add('gone'); }, 1700);
+});
+
+// CURSOR
+var cg = document.getElementById('cg');
+document.addEventListener('mousemove', function(e) { cg.style.left=e.clientX+'px'; cg.style.top=e.clientY+'px'; });
+
+// NAV
+window.addEventListener('scroll', function() {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// PARTICLES
+(function(){
+  var pc = document.getElementById('ptcl');
+  for(var i=0;i<18;i++){
+    var p=document.createElement('div'); p.className='particle';
+    var s=(2+Math.random()*4)+'px';
+    p.style.left=(Math.random()*100)+'%';
+    p.style.width=s; p.style.height=s;
+    p.style.animationDuration=(7+Math.random()*10)+'s';
+    p.style.animationDelay=(Math.random()*9)+'s';
+    pc.appendChild(p);
+  }
+})();
+
+// TYPEWRITER
+(function(){
+  var words=['Intelligence Artificielle','Analyse Spatiale','Data Science','Géomatique','Machine Learning','WebGIS'];
+  var wi=0,ci=0,del=false;
+  var el=document.getElementById('tw');
+  function type(){
+    var w=words[wi];
+    if(!del){el.textContent=w.substring(0,ci+1);ci++;if(ci===w.length){del=true;setTimeout(type,2000);return;}}
+    else{el.textContent=w.substring(0,ci-1);ci--;if(ci===0){del=false;wi=(wi+1)%words.length;}}
+    setTimeout(type,del?55:75);
+  }
+  setTimeout(type,3100);
+})();
+
+// SCROLL REVEAL
+var ro=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      e.target.querySelectorAll('.bf').forEach(function(b){ b.style.width=(b.dataset.w||0)+'%'; });
+    }
+  });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(function(el){ ro.observe(el); });
+
+// COUNTERS
+var co=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var target=parseInt(e.target.dataset.t),cur=0,step=Math.ceil(target/40);
+      var tm=setInterval(function(){ cur=Math.min(cur+step,target); e.target.textContent=cur; if(cur>=target)clearInterval(tm); },40);
+      co.unobserve(e.target);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('.cnt').forEach(function(el){ co.observe(el); });
+
+// FOOTER TYPEWRITER — boucle infinie : écrit puis efface "Amadou MBAYE"
+(function(){
+  var el = document.getElementById('ftTyped');
+  var text = 'Amadou MBAYE';
+  var i = 0;
+  var deleting = false;
+  var started = false;
+
+  function tick(){
+    if(!deleting){
+      // typing
+      el.textContent = text.substring(0, i + 1);
+      i++;
+      if(i === text.length){
+        // finished typing — pause then start deleting
+        deleting = true;
+        setTimeout(tick, 1800);
+        return;
+      }
+      setTimeout(tick, i === 7 ? 350 : 95); // pause after "Amadou"
+    } else {
+      // deleting
+      el.textContent = text.substring(0, i - 1);
+      i--;
+      if(i === 0){
+        // finished deleting — pause then start typing again
+        deleting = false;
+        setTimeout(tick, 500);
+        return;
+      }
+      setTimeout(tick, 60);
+    }
+  }
+
+  // Start only when footer enters viewport
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !started){
+        started = true;
+        setTimeout(tick, 400);
+      }
+    });
+  }, {threshold: 0.5});
+
+  obs.observe(document.querySelector('footer'));
+})();
+
+// FORM
+function sendForm(e) {
+  e.preventDefault();
+  var sb=document.getElementById('sb'), sbt=document.getElementById('sbt');
+  sb.style.background='linear-gradient(135deg,#16a34a,#22c55e)';
+  sbt.textContent='Envoye !';
+  sb.disabled=true;
+  setTimeout(function(){ sb.style.background=''; sbt.textContent='Envoyer'; sb.disabled=false; e.target.reset(); },3000);
+}
+</script>
+</body>
+</html>
