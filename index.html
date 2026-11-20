@@ -292,6 +292,10 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 .course-preview iframe{display:block;width:100%;height:clamp(360px,72vh,840px);border:1px solid var(--g200);border-radius:8px;margin-top:12px}
 .course-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:14px}
 .course-links a{color:var(--pd);text-decoration:underline}
+.course-chapters-title{margin-top:24px;font-size:1rem}
+.course-chapters{padding-inline-start:2rem}
+.course-chapters li{padding:12px 0;border-bottom:1px solid var(--g100)}
+.course-chapter-status{font-size:.875rem;color:var(--g600)}
 </style>
 </head>
 <body>
@@ -430,14 +434,14 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
             <a href="cours/presentation-geostatistique.pdf" target="_blank" rel="noopener">Ouvrir le PDF dans un nouvel onglet</a>
             <a href="cours/presentation-geostatistique.pdf" download>Télécharger le PDF</a>
           </div>
-          <details class="course-preview">
-            <summary>Visualiser le syllabus</summary>
-            <iframe title="Syllabus du module de géostatistique" src="cours/syllabus-geostatistique.pdf" loading="lazy"></iframe>
-          </details>
-          <div class="course-links">
-            <a href="cours/syllabus-geostatistique.pdf" target="_blank" rel="noopener">Ouvrir le syllabus dans un nouvel onglet</a>
-            <a href="cours/syllabus-geostatistique.pdf" download>Télécharger le syllabus (PDF)</a>
-          </div>
+          <h3 class="course-chapters-title">Chapitres du cours</h3>
+          <ol class="course-chapters" type="I">
+            <li data-pdf="cours/geostatistique-chapitre-1.pdf"><strong>Statistique descriptive</strong><p class="course-chapter-status">Support à venir</p></li>
+            <li data-pdf="cours/geostatistique-chapitre-2.pdf"><strong>Échantillonnage</strong><p class="course-chapter-status">Support à venir</p></li>
+            <li data-pdf="cours/geostatistique-chapitre-3.pdf"><strong>Inférence et régression simple</strong><p class="course-chapter-status">Support à venir</p></li>
+            <li data-pdf="cours/geostatistique-chapitre-4.pdf"><strong>Analyse statistique multivariée</strong><p class="course-chapter-status">Support à venir</p></li>
+            <li data-pdf="cours/geostatistique-chapitre-5.pdf"><strong>Analyse spatiale et géostatistique</strong><p class="course-chapter-status">Support à venir</p></li>
+          </ol>
         </div>
       </div>
     </div>
@@ -626,6 +630,45 @@ function sendForm(e) {
   sb.disabled=true;
   setTimeout(function(){ sb.style.background=''; sbt.textContent='Envoyer'; sb.disabled=false; e.target.reset(); },3000);
 }
+</script>
+<script>
+document.querySelectorAll('.course-chapters li[data-pdf]').forEach(async (chapter) => {
+  const path = chapter.dataset.pdf;
+  try {
+    const response = await fetch(path, {method: 'HEAD', cache: 'no-cache'});
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/pdf')) return;
+  } catch {
+    return;
+  }
+
+  const title = chapter.querySelector('strong').textContent;
+  const preview = document.createElement('details');
+  preview.className = 'course-preview';
+  const summary = document.createElement('summary');
+  summary.textContent = 'Visualiser le chapitre';
+  preview.append(summary);
+  preview.addEventListener('toggle', () => {
+    if (!preview.open || preview.querySelector('iframe')) return;
+    const frame = document.createElement('iframe');
+    frame.title = title;
+    frame.src = path;
+    preview.append(frame);
+  });
+
+  const links = document.createElement('div');
+  links.className = 'course-links';
+  const open = document.createElement('a');
+  open.href = path;
+  open.target = '_blank';
+  open.rel = 'noopener';
+  open.textContent = 'Ouvrir dans un nouvel onglet';
+  const download = document.createElement('a');
+  download.href = path;
+  download.download = '';
+  download.textContent = 'Télécharger le PDF';
+  links.append(open, download);
+  chapter.querySelector('.course-chapter-status').replaceWith(preview, links);
+});
 </script>
 </body>
 </html>
